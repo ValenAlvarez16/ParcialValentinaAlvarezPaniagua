@@ -16,7 +16,7 @@ namespace TicketingSystem.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Ticket>().HasIndex(c => c.Id).IsUnique();
+           
         }
     }
 }   

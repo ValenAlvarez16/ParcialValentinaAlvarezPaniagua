@@ -9,7 +9,7 @@ namespace TicketingSystem.DAL.Entities
 
         [Display(Name = "Use Date of the ticket")] //ASÍ ES COMO SE VA A MOSTRAR POR UI
         [Required(ErrorMessage = "El campo {0} es obligatorio.")] //NOT NULL
-        public DateTime? UseDate { get; set;}
+        public DateTime UseDate { get; set;}
 
         [Display(Name = "It was used? ")] //ASÍ ES COMO SE VA A MOSTRAR POR UI
         [Required(ErrorMessage = "El campo {0} es obligatorio.")] //NOT NULL
