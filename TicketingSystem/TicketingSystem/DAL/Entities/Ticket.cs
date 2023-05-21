@@ -3,7 +3,7 @@
 
 namespace TicketingSystem.DAL.Entities
 {
-    public class Tickets : Entity
+    public class Ticket : Entity
     {
 
 
