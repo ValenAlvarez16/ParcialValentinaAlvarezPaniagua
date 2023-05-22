@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Sockets;
 using TicketingSystem.DAL.Entities;
 using WebApplication1.Models;
 
@@ -46,6 +47,43 @@ namespace WebApplication1.Controllers
             {
                 return View("Error", ex);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            var url = String.Format("https://localhost:7032/api/Tickets/Edit/{0}", id);
+            var json = await _httpClient.CreateClient().GetStringAsync(url);
+            Ticket ticket = JsonConvert.DeserializeObject<Ticket>(json);
+            return View(ticket);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid? id, Ticket ticket)
+        {
+            var url = String.Format("https://localhost:7032/api/Tickets/Edit/{0}", id);
+            await _httpClient.CreateClient().PutAsJsonAsync(url, ticket);
+            return RedirectToAction("Index");
+               
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid? id)
+        {
+            var url = String.Format("https://localhost:7032/api/Tickets/Get/{0}", id);
+            var json = await _httpClient.CreateClient().GetStringAsync(url);
+            Ticket ticket= JsonConvert.DeserializeObject<Ticket>(json);
+            return View(ticket);
+        }
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid? id, Ticket ticket)
+        {
+            var url = String.Format("https://localhost:7032/api/Tickets/Delete/{0}", id);
+            await _httpClient.CreateClient().DeleteAsync(url);
+            return RedirectToAction("Index");
+
         }
     }   
 }
