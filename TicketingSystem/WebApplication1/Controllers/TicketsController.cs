@@ -52,7 +52,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid? id)
         {
-            var url = String.Format("https://localhost:7032/api/Tickets/Edit/{0}", id);
+            var url = String.Format("https://localhost:7032/api/Tickets/Get/{0}", id);
             var json = await _httpClient.CreateClient().GetStringAsync(url);
             Ticket ticket = JsonConvert.DeserializeObject<Ticket>(json);
             return View(ticket);
@@ -85,5 +85,47 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
 
         }
-    }   
+
+        [HttpGet]
+        [Route("Validate/{id}")]
+        public async Task<IActionResult> Validate(Guid? id)
+        {
+            var url = String.Format("https://localhost:7032/api/Tickets/Get/{0}", id);
+            var json = await _httpClient.CreateClient().GetStringAsync(url);
+            Ticket ticket = JsonConvert.DeserializeObject<Ticket>(json);
+
+            if (ticket == null)
+            {
+                return NotFound("The Ticket is not valid");
+            }
+
+            return View(ticket);
+
+
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Validate(Guid? id, Ticket ticket)
+        {
+            if (id == null)
+            {
+                return BadRequest("Invalid ticket ID");
+            }
+
+            var url = $"https://localhost:7032/api/Tickets/Edit/{id}";
+            var response = await _httpClient.CreateClient().PutAsJsonAsync(url, ticket);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View("Error");
+        }
+
+
+
+    }
 }
