@@ -61,19 +61,21 @@ namespace TicketingSystem.Controllers
             return Ok(ticket);
         }
 
+
         [HttpPut, ActionName("Edit")]
         [Route("Edit/{id}")]
         public async Task<ActionResult> EditTicket(Guid? id, Ticket ticket)
         {
             try
             {
-                if (id != ticket.Id) return NotFound("Ticket not found");
+                if (id != ticket.Id) return NotFound("ticket not found");
 
                 ticket.ModifiedDate = DateTime.Now;
 
                 _context.Tickets.Update(ticket);
                 await _context.SaveChangesAsync(); // Update...
             }
+           
             catch (Exception ex)
             {
                 return Conflict(ex.Message);
@@ -81,6 +83,7 @@ namespace TicketingSystem.Controllers
 
             return Ok(ticket);
         }
+
 
         [HttpDelete, ActionName("Delete")]
         [Route("Delete/{id}")]
@@ -92,7 +95,7 @@ namespace TicketingSystem.Controllers
             if (ticket == null) return NotFound("ticket not found");
 
             _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync(); //Hace las veces del Delete en SQL
+            await _context.SaveChangesAsync(); 
 
             return Ok(new ObjectResult(ticket)
             {
@@ -100,33 +103,38 @@ namespace TicketingSystem.Controllers
             });
         }
 
-            [HttpPost, ActionName("Validate")]
-            [Route("Validate")]
-            public async Task<ActionResult> ValidateTicket(Guid? id, string entranceGate)
+        [HttpPost]
+        [Route("Validate")]
+        public async Task<ActionResult> ValidateTicket(Guid? id)
+        {
+            var ticket = _context.Tickets.Find(id);
+
+            if (ticket == null)
             {
-                var ticket = await _context.Tickets.FirstOrDefaultAsync(c => c.Id == id);
-
-                if (ticket == null)
-                {
-                    return NotFound("The Ticket is not valid");
-                }
-                else if (ticket.IsUsed)
-                {
-                    return Conflict($"The ticket has already been used and its date of use: {ticket.UseDate}. Portería: {ticket.EntranceGate}");
-                }
-                else
-                {
-                    ticket.UseDate = DateTime.Now;
-                    ticket.IsUsed = true;
-                    ticket.EntranceGate = entranceGate;
-
-                    _context.Tickets.Update(ticket);
-                    await _context.SaveChangesAsync();
-
-                    return Ok("The ticket is correct");
-                }
+                return NotFound("The Ticket is not valid");
             }
 
-        
+            if (ticket.Id != id)
+            {
+                return BadRequest("The ticket ID does not match");
+            }
+
+            if (ticket.IsUsed)
+            {
+                return Conflict($"The ticket has already been used and its date of use: {ticket.UseDate}. Portería: {ticket.EntranceGate}");
+            }
+
+            ticket.UseDate = DateTime.Now;
+            ticket.IsUsed = true;
+            ticket.EntranceGate = "Occidental";
+
+            _context.Tickets.Update(ticket);
+            await _context.SaveChangesAsync();
+
+            return Ok("The ticket is correct");
+        }
+
+
+
     }
 }

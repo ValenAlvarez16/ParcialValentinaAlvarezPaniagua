@@ -8,7 +8,6 @@ namespace TicketingSystem.DAL.Entities
 
 
         [Display(Name = "Use Date of the ticket")] //show by UI
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")] //NOT NULL
         public DateTime? UseDate { get; set;}
 
         [Display(Name = "It was used? ")] //show by UI
@@ -16,8 +15,8 @@ namespace TicketingSystem.DAL.Entities
         public bool IsUsed { get; set;}
 
         [Display(Name = "Porter's lodge")] //show by UI
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")] //NOT NULL
-        public string? EntranceGate { get; set;}
+        [MaxLength(10, ErrorMessage = "El campo {0} debe tener máximo {1} caracteres.")]
+        public string EntranceGate { get; set;}
 
     }
 
