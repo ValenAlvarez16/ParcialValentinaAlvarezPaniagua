@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TicketingSystem.DAL.Entities;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -12,29 +13,20 @@ namespace WebApplication1.Controllers
         public TicketsController(IHttpClientFactory httpClient)
         {
             _httpClient = httpClient;
-            
+
         }
 
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            try
-            {
+            
                 var url = "https://localhost:7032/api/Tickets/Get";
                 var json = await _httpClient.CreateClient().GetStringAsync(url);
                 List<Ticket> tickets = JsonConvert.DeserializeObject<List<Ticket>>(json);
                 return View(tickets);
-            }
-            catch (Exception ex)
-            {
-                return View("Error", ex);
-            }
+            
+           
+
         }
 
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-    }
+    }   
 }

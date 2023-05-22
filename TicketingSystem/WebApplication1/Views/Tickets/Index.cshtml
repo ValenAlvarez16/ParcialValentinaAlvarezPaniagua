@@ -7,24 +7,27 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
 
 <p>
-    <a asp-action="Create" class="btn btn-outline-primary">Crear nueva categoría</a>
+    <a asp-action="Create" class="btn btn-outline-primary">Create new Ticket</a>
 </p>
 
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Categorías</h3>
+                <h3 class="panel-title">Tickets</h3>
             </div>
             <div class="panel-body">
-                <table class="table table-hover table-responsive table-striped" id="CategoryTable">
+                <table class="table table-hover table-responsive table-striped" id="TicketTable">
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(model => model.Name)
+                                @Html.DisplayNameFor(model => model.IsUsed)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.Description)
+                                @Html.DisplayNameFor(model => model.UseDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.EntranceGate)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.CreatedDate)
@@ -32,6 +35,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.ModifiedDate)
                             </th>
+                            
                             <th></th>
                         </tr>
                     </thead>
@@ -40,10 +44,13 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
+                                    @Html.DisplayFor(modelItem => item.IsUsed)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Description)
+                                    @Html.DisplayFor(modelItem => item.UseDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EntranceGate)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedDate)
@@ -52,9 +59,9 @@
                                     @Html.DisplayFor(modelItem => item.ModifiedDate)
                                 </td>
                                 <td>
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Detalles</a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Eliminar</a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Details</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Eliminate</a>
                                 </td>
                             </tr>
                         }
@@ -73,7 +80,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#CategoryTable').DataTable({
+            $('#TicketTable').DataTable({
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
                 },
