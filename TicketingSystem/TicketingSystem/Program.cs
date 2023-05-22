@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using TicketingSystem.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,12 +11,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddTransient<SeederDb>();
+
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddDbContext<ConcertDB_ValentinaAlvarez>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 var app = builder.Build();
+
+SeederData();
+void SeederData()
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (IServiceScope? scope = scopedFactory.CreateScope())
+    {
+        SeederDb? service = scope.ServiceProvider.GetService<SeederDb>();
+        service.SeederAsync().Wait();
+    }
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

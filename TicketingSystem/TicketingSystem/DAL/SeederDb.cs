@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
 using TicketingSystem.DAL.Entities;
 
 namespace TicketingSystem.DAL
@@ -14,27 +14,27 @@ namespace TicketingSystem.DAL
         public async Task SeederAsync()
         {
             await _context.Database.EnsureCreatedAsync(); //This line helps me create my database automatically
-            await PopulateTicketsAsync();
+            //await PopulateTicketsAsync();
            
 
             await _context.SaveChangesAsync();
         }
 
-            private async Task PopulateTicketsAsync()
+        private async Task PopulateTicketsAsync()
+        {
+            for (int i = 0; i < 50000; i++)
             {
-                for (int i = 0; i < 50000; i++)
+                Ticket ticket = new Ticket
                 {
-                    Ticket ticket = new Ticket
-                    {
-                        UseDate = null,
-                        IsUsed = false,
-                        EntranceGate = null
-                    };
+                    UseDate = null,
+                    IsUsed = false,
+                    EntranceGate = null
+                };
 
-                    _context.Tickets.Add(ticket);
-                }
+                _context.Tickets.Add(ticket);
             }
+        }
 
-        
+
     }
 }

@@ -98,7 +98,35 @@ namespace TicketingSystem.Controllers
             {
                 Value = "El mensaje fue eliminado"
             });
-
         }
+
+            [HttpPost, ActionName("Validate")]
+            [Route("Validate")]
+            public async Task<ActionResult> ValidateTicket(Guid? id, string entranceGate)
+            {
+                var ticket = await _context.Tickets.FirstOrDefaultAsync(c => c.Id == id);
+
+                if (ticket == null)
+                {
+                    return NotFound("The Ticket is not valid");
+                }
+                else if (ticket.IsUsed)
+                {
+                    return Conflict($"The ticket has already been used and its date of use: {ticket.UseDate}. Portería: {ticket.EntranceGate}");
+                }
+                else
+                {
+                    ticket.UseDate = DateTime.Now;
+                    ticket.IsUsed = true;
+                    ticket.EntranceGate = entranceGate;
+
+                    _context.Tickets.Update(ticket);
+                    await _context.SaveChangesAsync();
+
+                    return Ok("The ticket is correct");
+                }
+            }
+
+        
     }
 }
