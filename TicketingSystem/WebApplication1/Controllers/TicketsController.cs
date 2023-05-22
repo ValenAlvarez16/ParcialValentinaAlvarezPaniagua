@@ -23,10 +23,29 @@ namespace WebApplication1.Controllers
                 var json = await _httpClient.CreateClient().GetStringAsync(url);
                 List<Ticket> tickets = JsonConvert.DeserializeObject<List<Ticket>>(json);
                 return View(tickets);
-            
-           
 
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Ticket ticket)
+        {
+            try
+            {
+                var url = "https://localhost:7032/api/Tickets/Create";
+                await _httpClient.CreateClient().PostAsJsonAsync(url, ticket);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View("Error", ex);
+            }
+        }
     }   
 }
